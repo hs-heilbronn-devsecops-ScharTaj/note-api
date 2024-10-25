@@ -1,13 +1,15 @@
+# Name of the workflow
 name: Python Tests
 
+# Action to trigger the workflow -> In this case, the workflow is triggered when we push something to main branch
 on:
-  pull_request:
-    branches:
-      - main
-      - "*"
+  push:
+    branches: [ "main" ]
 
+# Define jobs
 jobs:
   test:
+    # Assign runner
     runs-on: ubuntu-latest
 
     # Strategy to run tests in parallel
@@ -23,12 +25,19 @@ jobs:
         with:
           python-version: '3.x'
 
+      # Install required dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
-
+          pip install pytest-cov
+          
+      # Run tests with pytest in parallel and collect coverage
+      - name: Test with pytest in general
+        run: |
+          pytest
+          
       # Run tests with pytest in parallel and collect coverage
       - name: Run tests with pytest
         run: |
@@ -40,7 +49,7 @@ jobs:
           name: coverage-report
           path: ./.coverage
 
+      # Display the test coverage
       - name: Display coverage report
         run: |
-          pip install pytest-cov
           pytest --cov=note_api --cov-report=term-missing

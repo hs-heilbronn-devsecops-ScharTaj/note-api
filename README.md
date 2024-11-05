@@ -11,6 +11,4 @@ Create a GitHub codespace and run the following command:
 projen dev
 ```
 
-Then open the `/docs` path to play with the API."Test Trigger" 
-"Test Trigger" 
-"Test Trigger" 
+Then open the `/docs` path to play with the API.

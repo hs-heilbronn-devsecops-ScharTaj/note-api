@@ -1,18 +1,25 @@
-name: Python Tests
+# Name of the workflow
+name: Python Tests and Code Coverage
 
+# Action to trigger the workflow -> In this case, the workflow is triggered when we push something to main branch
 on:
   pull_request:
     branches:
       - main
       - "*"
+  push:
+    branches:
+      - main
 
+# Define jobs
 jobs:
   test:
+    # Assign runner
     runs-on: ubuntu-latest
 
     # Strategy to run tests in parallel
-    strategy:
-      max-parallel: 4
+    # strategy:
+    #   max-parallel: 4
 
     steps:
       - name: Check out repository
@@ -23,24 +30,30 @@ jobs:
         with:
           python-version: '3.x'
 
+      # Install required dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
-
-      # Run tests with pytest in parallel and collect coverage
-      - name: Run tests with pytest
-        run: |
-          pytest --cov=note_api --numprocesses=auto tests/
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: ./.coverage
-
-      - name: Display coverage report
-        run: |
           pip install pytest-cov
-          pytest --cov=note_api --cov-report=term-missing
+          
+      # Run tests with pytest in parallel and collect coverage
+      - name: Run tests with pytest and generate coverage report
+        run: |
+          pytest --cov=note_api --cov-report=xml
+          
+      # Run tests with pytest in parallel and collect coverage
+      # - name: Run tests with pytest
+      #   run: |
+      #     pytest --cov=note_api --numprocesses=auto tests/
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: unittests
+          name: codecov-coverage
+          fail_ci_if_error: true
+          verbose: true

@@ -18,10 +18,16 @@ jobs:
     runs-on: ubuntu-latest
 
     # Strategy to run tests in parallel
-    # strategy:
-    #   max-parallel: 4
+    strategy:
+      max-parallel: 4
 
     steps:
+      - name: Set up Node.js (to ensure compatibility)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+    
       - name: Check out repository
         uses: actions/checkout@v3
 

@@ -48,11 +48,6 @@ jobs:
       - name: Run tests with pytest and generate coverage report
         run: |
           pytest --cov=note_api --cov-report=xml
-          
-      # Run tests with pytest in parallel and collect coverage
-      # - name: Run tests with pytest
-      #   run: |
-      #     pytest --cov=note_api --numprocesses=auto tests/
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -69,3 +64,20 @@ jobs:
         uses: snyk/actions/python@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      # Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/hs-heilbronn-devsecops-schartaj/note-api:${{ github.sha }} .
+
+      # Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Push Docker image to GitHub Container Registry
+      - name: Push Docker image to GitHub Container Registry
+        run: |
+          docker push ghcr.io/hs-heilbronn-devsecops-schartaj/note-api:${{ github.sha }}

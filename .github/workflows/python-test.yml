@@ -63,3 +63,9 @@ jobs:
           name: codecov-coverage
           fail_ci_if_error: true
           verbose: true
+
+      # Add Snyk security check
+      - name: Snyk Security Scan
+          uses: snyk/actions/python@master
+          env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

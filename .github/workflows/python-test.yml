@@ -1,10 +1,15 @@
 # Name of the workflow
-name: Python Tests
+name: Python Tests and Code Coverage
 
 # Action to trigger the workflow -> In this case, the workflow is triggered when we push something to main branch
 on:
+  pull_request:
+    branches:
+      - main
+      - "*"
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 # Define jobs
 jobs:
@@ -18,12 +23,12 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
       # Install required dependencies
       - name: Install dependencies
@@ -34,16 +39,21 @@ jobs:
           pip install pytest-cov
           
       # Run tests with pytest in parallel and collect coverage
-      - name: Test with pytest in general
+      - name: Run tests with pytest and generate coverage report
         run: |
-          pytest
+          pytest --cov=note_api --cov-report=xml
           
       # Run tests with pytest in parallel and collect coverage
-      - name: Run tests with pytest
-        run: |
-          pytest --cov=note_api --numprocesses=auto tests/
+      # - name: Run tests with pytest
+      #   run: |
+      #     pytest --cov=note_api --numprocesses=auto tests/
 
-      # Display the test coverage
-      - name: Display coverage report
-        run: |
-          pytest --cov=note_api --cov-report=term-missing
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          flags: unittests
+          name: codecov-coverage
+          fail_ci_if_error: true
+          verbose: true

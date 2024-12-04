@@ -1,0 +1,45 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write   # for the workload identity
+      roles/cloudrun.admin: write
+      roles/iam.serviceAccountUser: write
+
+    steps:
+      # Check out the repository
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      # Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: 'projects/70756149774/locations/global/workloadIdentityPools/github-actions/providers/github-repos'
+          service_account: 'hshn-devsecops-service-account@hs-heilbronn-devsecops.iam.gserviceaccount.com'
+
+      # Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: 'hs-heilbronn-devsecops'  
+          export_default_credentials: true
+
+      # Deploy to Google Cloud Run
+      - name: Deploy to Google Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: note-api-hs-heilbronn-devsecops-ScharTaj  
+          image: ghcr.io/hs-heilbronn-devsecops-schartaj/note-api:${{ github.sha }}
+          region: europe-west1  
+          project_id: 'hs-heilbronn-devsecops'
+          env_vars: BACKEND=memory

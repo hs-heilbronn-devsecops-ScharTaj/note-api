@@ -12,8 +12,6 @@ jobs:
     permissions:
       contents: read
       id-token: write   # for the workload identity
-      roles/cloudrun.admin: write
-      roles/iam.serviceAccountUser: write
 
     steps:
       # Check out the repository

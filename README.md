@@ -12,7 +12,4 @@ projen dev
 ```
 
 Then open the `/docs` path to play with the API.
-
-"Testing Snyk Integration" 
-"Testing Snyk Integration" 
-"Docker Push Test" 
+ 

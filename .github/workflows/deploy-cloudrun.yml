@@ -37,6 +37,6 @@ jobs:
         with:
           service: note-api-hs-heilbronn-devsecops-schartaj  
           image: gcr.io/hs-heilbronn-devsecops/note-api:b05b2e3ff64833e5ea4894be6a307bf3ae1f3f7b
-          region: europe-west1  
+          region: europe-west3  
           project_id: 'hs-heilbronn-devsecops'
           env_vars: BACKEND=memory

@@ -7,6 +7,7 @@ uvicorn[standard]
 # OpenTelemetry dependencies
 opentelemetry-api==1.29.0
 opentelemetry-sdk==1.29.0
-opentelemetry-exporter-google-cloud==0.18b1
+opentelemetry-exporter-gcp-monitoring
+opentelemetry-exporter-gcp-trace
 opentelemetry-instrumentation-fastapi==0.50b0
 opentelemetry-instrumentation-requests==0.50b0

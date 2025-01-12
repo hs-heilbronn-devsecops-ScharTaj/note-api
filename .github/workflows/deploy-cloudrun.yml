@@ -18,6 +18,10 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
 
+      # Install dependencies
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
       # Authenticate to Google Cloud
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1

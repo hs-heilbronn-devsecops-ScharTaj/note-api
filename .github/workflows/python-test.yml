@@ -1,6 +1,7 @@
 # Name of the workflow
 name: Python Tests and Code Coverage
 
+# Action to trigger the workflow -> In this case, the workflow is triggered when we push something to main branch
 on:
   pull_request:
     branches:
@@ -21,27 +22,19 @@ jobs:
       max-parallel: 4
 
     steps:
-      # Set up Node.js (optional)
       - name: Set up Node.js (to ensure compatibility)
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Check out repository
+    
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Set up Python
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
           python-version: '3.x'
-
-      # Export Dummy-Credentials für Tests
-      - name: Set Application Default Credentials
-        run: echo '{}' > /tmp/fake_credentials.json
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/fake_credentials.json
 
       # Install required dependencies
       - name: Install dependencies
@@ -53,12 +46,9 @@ jobs:
           
       # Run tests with pytest in parallel and collect coverage
       - name: Run tests with pytest and generate coverage report
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/fake_credentials.json
         run: |
           pytest --cov=note_api --cov-report=xml
 
-      # Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -74,16 +64,10 @@ jobs:
         uses: snyk/actions/python@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
       # Build Docker image
       - name: Build Docker image
         run: |
           docker build -t ghcr.io/hs-heilbronn-devsecops-schartaj/note-api:${{ github.sha }} .
-
-      # Push Docker image to Google Container Registry
-      - name: Push Docker image to Google Container Registry
-        run: |
-          docker push gcr.io/hs-heilbronn-devsecops/note-api:${{ github.sha }}
 
       # Log in to GitHub Container Registry
       - name: Log in to GitHub Container Registry

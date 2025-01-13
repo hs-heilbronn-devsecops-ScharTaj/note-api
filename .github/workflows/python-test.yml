@@ -45,9 +45,17 @@ jobs:
           pip install pytest-cov
           
       # Run tests with pytest in parallel and collect coverage
+      # - name: Run tests with pytest and generate coverage report
+      #   run: |
+      #     pytest --cov=note_api --cov-report=xml
+
+      # Run tests with pytest in parallel and collect coverage
       - name: Run tests with pytest and generate coverage report
+        env:
+          TESTING: "true"
         run: |
           pytest --cov=note_api --cov-report=xml
+
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

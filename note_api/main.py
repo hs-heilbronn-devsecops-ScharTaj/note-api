@@ -18,8 +18,19 @@ from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.trace import SpanKind
 import google.auth
 
+import os
+
 # Google Cloud Authentication
-credentials, project_id = google.auth.default()
+if os.getenv("TESTING", "false").lower() == "true":
+    # Verwende Dummy-Werte in der Testumgebung
+    credentials = None
+    project_id = "dummy-project-id"
+else:
+    # Nutze echte Google-Auth
+    credentials, project_id = google.auth.default()
+
+# Google Cloud Authentication
+# credentials, project_id = google.auth.default()
 
 # Ressource definieren
 resource = Resource.create({"service.name": "note-api"})

@@ -49,14 +49,6 @@ jobs:
         run: |
           pytest --cov=note_api --cov-report=xml
 
-      # Set up Google Cloud credentials
-      - name: Set up Google Cloud credentials
-        run: |
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > /tmp/application_default_credentials.json
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/application_default_credentials.json
-
-
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

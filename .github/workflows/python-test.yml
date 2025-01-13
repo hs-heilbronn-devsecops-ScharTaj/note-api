@@ -45,16 +45,17 @@ jobs:
           pip install pytest-cov
           
       # Run tests with pytest in parallel and collect coverage
-      # - name: Run tests with pytest and generate coverage report
-      #   run: |
-      #     pytest --cov=note_api --cov-report=xml
-
-      # Run tests with pytest in parallel and collect coverage
       - name: Run tests with pytest and generate coverage report
-        env:
-          TESTING: "true"
         run: |
           pytest --cov=note_api --cov-report=xml
+
+      # Set up Google Cloud credentials
+      - name: Set up Google Cloud credentials
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > /tmp/application_default_credentials.json
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/application_default_credentials.json
+
 
 
       - name: Upload coverage to Codecov

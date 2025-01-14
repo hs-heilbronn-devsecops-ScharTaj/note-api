@@ -11,3 +11,6 @@ opentelemetry-exporter-gcp-monitoring
 opentelemetry-exporter-gcp-trace
 opentelemetry-instrumentation-fastapi==0.50b0
 opentelemetry-instrumentation-requests==0.50b0
+requests>=2.32.2 # not directly required, pinned by Snyk to avoid a vulnerability
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
